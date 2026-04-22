@@ -1973,6 +1973,12 @@ function(corrosion_add_cxxbridge cxx_target)
     endif()
 
     file(MAKE_DIRECTORY "${generated_dir}/include/rust")
+    # Pre-create placeholder so CMake doesn't reject the path when evaluating INTERFACE_SOURCES
+    # at configure time in consuming directories (CMake 4.x is strict about this). The build
+    # step below overwrites the placeholder with real content.
+    if(NOT EXISTS "${generated_dir}/include/rust/cxx.h")
+        file(TOUCH "${generated_dir}/include/rust/cxx.h")
+    endif()
     add_custom_command(
             OUTPUT "${generated_dir}/include/rust/cxx.h"
             COMMAND
@@ -1999,6 +2005,14 @@ function(corrosion_add_cxxbridge cxx_target)
         set(rust_source_path "${manifest_dir}/src/${filepath}")
 
         file(MAKE_DIRECTORY "${header_placement_dir}/${directory}" "${source_placement_dir}/${directory}")
+
+        # Pre-create placeholders for the same reason as cxx.h above.
+        if(NOT EXISTS "${header_placement_dir}/${cxx_header}")
+            file(TOUCH "${header_placement_dir}/${cxx_header}")
+        endif()
+        if(NOT EXISTS "${source_placement_dir}/${cxx_source}")
+            file(TOUCH "${source_placement_dir}/${cxx_source}")
+        endif()
 
         add_custom_command(
             OUTPUT
