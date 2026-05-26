@@ -1983,7 +1983,7 @@ function(corrosion_add_cxxbridge cxx_target)
             OUTPUT "${generated_dir}/include/rust/cxx.h"
             COMMAND
             ${cxxbridge} --header --output "${generated_dir}/include/rust/cxx.h"
-            DEPENDS "cxxbridge_v${cxx_required_version}"
+            DEPENDS "cxxbridge_v${cxx_required_version}" "${cxxbridge}"
             COMMENT "Generating rust/cxx.h header"
     )
 
@@ -2024,7 +2024,7 @@ function(corrosion_add_cxxbridge cxx_target)
                 ${cxxbridge} ${rust_source_path}
                     --output "${source_placement_dir}/${cxx_source}"
                     --include "${cxx_target}/${cxx_header}"
-            DEPENDS "cxxbridge_v${cxx_required_version}" "${rust_source_path}"
+            DEPENDS "cxxbridge_v${cxx_required_version}" "${rust_source_path}" "${cxxbridge}"
             COMMENT "Generating cxx bindings for crate ${_arg_CRATE} and file src/${filepath}"
         )
 
